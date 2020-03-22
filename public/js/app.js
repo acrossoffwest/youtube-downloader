@@ -55914,8 +55914,15 @@ var render = function() {
             _vm._l(_vm.videos, function(video) {
               return _c("div", { staticClass: "row" }, [
                 _c("div", { staticClass: "col-4" }, [
-                  _c("a", { attrs: { href: "/videos/" + video.youtube_id } }, [
-                    _vm._v(_vm._s(video.youtube_id))
+                  _c("p", [
+                    _vm._v(_vm._s(video.youtube_id) + " - "),
+                    video.uploaded || video.percent === 100
+                      ? _c(
+                          "a",
+                          { attrs: { href: "/videos/" + video.youtube_id } },
+                          [_vm._v("Watch")]
+                        )
+                      : _vm._e()
                   ])
                 ]),
                 _vm._v(" "),

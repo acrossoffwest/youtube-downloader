@@ -14,7 +14,7 @@
             </div>
             <div class="row" v-for="video in videos">
                 <div class="col-4">
-                    <a :href="`/videos/${video.youtube_id}`">{{ video.youtube_id }}</a>
+                    <p>{{ video.youtube_id }} - <a v-if="video.uploaded || video.percent === 100" :href="`/videos/${video.youtube_id}`">Watch</a></p>
                 </div>
                 <div class="col-4">
                     {{ video.status ? video.status : (video.uploaded ? 'Done' : 'Unknown') }}
