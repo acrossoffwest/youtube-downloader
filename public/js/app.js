@@ -55915,13 +55915,16 @@ var render = function() {
               return _c("div", { staticClass: "row" }, [
                 _c("div", { staticClass: "col-4" }, [
                   _c("p", [
-                    _vm._v(_vm._s(video.youtube_id) + " - "),
+                    _vm._v(_vm._s(video.youtube_id) + " "),
                     video.uploaded || video.percent === 100
-                      ? _c(
-                          "a",
-                          { attrs: { href: "/videos/" + video.youtube_id } },
-                          [_vm._v("Watch")]
-                        )
+                      ? _c("span", [
+                          _vm._v("- "),
+                          _c(
+                            "a",
+                            { attrs: { href: "/videos/" + video.youtube_id } },
+                            [_vm._v("Watch")]
+                          )
+                        ])
                       : _vm._e()
                   ])
                 ]),
