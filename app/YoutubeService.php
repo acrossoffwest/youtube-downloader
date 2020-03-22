@@ -19,11 +19,14 @@ class YoutubeService
     public function getLinks(string $url): array
     {
         $yt = new YouTubeDownloader();
-        return $yt->getDownloadLinks($url);
+        return $yt->getDownloadLinks($this->getVideoId($url));
     }
 
     public function getVideoId(string $url): string
     {
+        if (preg_match('/(https\:\/\/youtu\.be\/)/', $url)) {
+            return str_replace('https://youtu.be/', '', $url);
+        }
         $params = explode('&', parse_url($url)['query']);
         $id = null;
         foreach ($params as $param) {
