@@ -12,7 +12,7 @@ RUN docker-php-ext-install pcntl
 RUN printf "\n" | pecl install -o -f redis
 RUN echo "extension=redis.so" > /usr/local/etc/php/conf.d/redis.ini
 
-RUN apt-get install -y zlib1g-dev libicu-dev g++ build-essential libssl-dev zlib1g-dev libpng-dev libjpeg-dev libfreetype6-dev ffmpeg
+RUN apt-get install -y --fix-missing zlib1g-dev libicu-dev g++ build-essential libssl-dev zlib1g-dev libpng-dev libjpeg-dev libfreetype6-dev ffmpeg
 
 RUN docker-php-ext-configure gd --with-jpeg --with-freetype
 RUN docker-php-ext-install gd
