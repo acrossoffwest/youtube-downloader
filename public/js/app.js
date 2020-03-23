@@ -1955,6 +1955,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -1974,12 +1977,12 @@ __webpack_require__.r(__webpack_exports__);
 
       fetch(this.videosLoadStart, {
         method: 'POST',
-        body: JSON.stringify({
-          url: this.videoUrl
-        }),
         headers: {
           'Content-Type': 'application/json'
-        }
+        },
+        body: JSON.stringify({
+          url: this.videoUrl
+        })
       }).then(function (r) {
         if (r.status !== 200) {
           return alert('Something went wrong.');
@@ -55802,40 +55805,42 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "videos-download-form-container" }, [
-    _c("form", { staticClass: "form", attrs: { action: "" } }, [
-      _c("div", { staticClass: "form-group" }, [
-        _c("label", { attrs: { for: "url" } }, [_vm._v("Url")]),
-        _vm._v(" "),
-        _c("input", {
-          directives: [
-            {
-              name: "model",
-              rawName: "v-model",
-              value: _vm.videoUrl,
-              expression: "videoUrl"
-            }
-          ],
-          staticClass: "form-control",
-          attrs: { type: "text", id: "url" },
-          domProps: { value: _vm.videoUrl },
-          on: {
-            input: function($event) {
-              if ($event.target.composing) {
-                return
+    _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col-md-10" }, [
+        _c("div", { staticClass: "form-group" }, [
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.videoUrl,
+                expression: "videoUrl"
               }
-              _vm.videoUrl = $event.target.value
+            ],
+            staticClass: "form-control",
+            attrs: { type: "text", id: "url", placeholder: "URL" },
+            domProps: { value: _vm.videoUrl },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.videoUrl = $event.target.value
+              }
             }
-          }
-        })
+          })
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-md-2" }, [
+        _c("div", { staticClass: "form-group" }, [
+          _c(
+            "button",
+            { staticClass: "btn btn-success", on: { click: _vm.loadStart } },
+            [_vm._v("Download")]
+          )
+        ])
       ])
-    ]),
-    _vm._v(" "),
-    _c("div", { staticClass: "form-group" }, [
-      _c(
-        "button",
-        { staticClass: "btn btn-success", on: { click: _vm.loadStart } },
-        [_vm._v("Start downloading")]
-      )
     ])
   ])
 }

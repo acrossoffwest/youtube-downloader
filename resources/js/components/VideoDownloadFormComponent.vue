@@ -1,13 +1,16 @@
 <template>
     <div class="videos-download-form-container">
-        <form action="" class="form">
-            <div class="form-group">
-                <label for="url">Url</label>
-                <input type="text" id="url" v-model="videoUrl" class="form-control">
+        <div class="row">
+            <div class="col-md-10">
+                    <div class="form-group">
+                        <input type="text" id="url" v-model="videoUrl" class="form-control" placeholder="URL">
+                    </div>
             </div>
-        </form>
-        <div class="form-group">
-            <button @click="loadStart" class="btn btn-success">Start downloading</button>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <button @click="loadStart" class="btn btn-success">Download</button>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -31,12 +34,12 @@
                 }
                 fetch(this.videosLoadStart, {
                     method: 'POST',
-                    body: JSON.stringify({
-                        url: this.videoUrl
-                    }),
                     headers: {
                         'Content-Type': 'application/json'
-                    }
+                    },
+                    body: JSON.stringify({
+                        url: this.videoUrl
+                    })
                 }).then((r) => {
                     if (r.status !== 200) {
                         return alert('Something went wrong.');

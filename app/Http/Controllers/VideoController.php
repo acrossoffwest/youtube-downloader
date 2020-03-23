@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\UploadingFile\ProgressEvent;
-use App\File;
-use App\ProgressData;
-use App\YoutubeVideo;
+use App\Models\File;
+use App\Services\Youtube\YoutubeVideoService;
 use Illuminate\Http\Request;
 use Iman\Streamer\VideoStreamer;
 
+/**
+ * Class VideoController
+ * @package App\Http\Controllers
+ */
 class VideoController extends Controller
 {
     /**
@@ -18,13 +20,13 @@ class VideoController extends Controller
      */
     public function __construct()
     {
-//        $this->middleware('auth');
+        // $this->middleware('auth');
     }
 
     /**
-     * Show the application dashboard.
+     * List of loaded(or loading) videos
      *
-     * @return \Illuminate\Contracts\Support\Renderable
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function index()
     {
@@ -33,14 +35,20 @@ class VideoController extends Controller
         ]);
     }
 
-    public function video(Request $request, $id)
+    /**
+     * Single page for watching loaded video with links for downloading video or audio
+     *
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function show($id)
     {
-        $ytv = new YoutubeVideo('https://www.youtube.com/watch?v='.$id);
+        $ytv = new YoutubeVideoService('https://www.youtube.com/watch?v='.$id);
 
         return view('video', [
             'data' => [
                 [
-                    'url' => route('videos.play', ['id' => $id]),
+                    'url' => route('videos.stream', ['id' => $id]),
                     'type' => 'video/mp4',
                     'size' => '1080',
                     'model' => $ytv->getModel(true)
@@ -49,9 +57,16 @@ class VideoController extends Controller
         ]);
     }
 
-    public function play(Request $request, $id)
+    /**
+     * Video/audio stream
+     *
+     * @param Request $request
+     * @param $id
+     * @throws \Exception
+     */
+    public function stream(Request $request, $id)
     {
-        $ytv = new YoutubeVideo('https://www.youtube.com/watch?v='.$id);
+        $ytv = new YoutubeVideoService('https://www.youtube.com/watch?v='.$id);
 
         if ($request->get('type') === 'audio') {
             VideoStreamer::streamFile($ytv->downloadAudio());

@@ -19,5 +19,14 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('videos', 'Api\VideoController@index');
-Route::post('videos', 'Api\VideoController@download');
+Route::group([
+    'namespace' => 'Api'
+], function () {
+    Route::group([
+        'prefix' => 'videos',
+        'a' => 'videos'
+    ], function () {
+        Route::get('/', 'VideoController@index');
+        Route::post('/', 'VideoController@runUploading');
+    });
+});

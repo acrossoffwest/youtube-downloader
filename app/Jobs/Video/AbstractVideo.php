@@ -2,7 +2,7 @@
 
 namespace App\Jobs\Video;
 
-use App\YoutubeVideo;
+use App\Services\Youtube\YoutubeVideoService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -13,14 +13,14 @@ abstract class AbstractVideo implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    protected YoutubeVideo $video;
+    protected YoutubeVideoService $video;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(YoutubeVideo $video)
+    public function __construct(YoutubeVideoService $video)
     {
         $this->video = $video;
     }

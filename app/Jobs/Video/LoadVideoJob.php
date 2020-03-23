@@ -2,7 +2,7 @@
 
 namespace App\Jobs\Video;
 
-use App\YoutubeVideo;
+use App\Services\Youtube\YoutubeVideoService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -11,7 +11,7 @@ use Illuminate\Queue\SerializesModels;
 
 class LoadVideoJob extends AbstractVideo
 {
-    public function __construct(YoutubeVideo $video)
+    public function __construct(YoutubeVideoService $video)
     {
         parent::__construct($video);
     }

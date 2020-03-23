@@ -1,11 +1,19 @@
 @extends('base')
 
 @section('content')
-<div class="title m-b-md">
-    Videos
-</div>
-<div class="">
-    <video-download-form-component></video-download-form-component>
-    <videos-list-component></videos-list-component>
+<div class="text-center">
+    <div class="row mt-20">
+        <div class="col-md-12">
+            <div class="title m-b-md">
+                Videos
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <video-download-form-component></video-download-form-component>
+            <videos-list-component></videos-list-component>
+        </div>
+    </div>
 </div>
 @stop

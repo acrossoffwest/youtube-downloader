@@ -4,8 +4,7 @@
 namespace App\Events\UploadingFile;
 
 
-use App\File;
-use App\ProgressData;
+use App\Models\File;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;

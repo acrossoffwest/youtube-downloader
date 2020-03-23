@@ -13,17 +13,19 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', 'VideoController@index');
-Route::get('/videos/{id}', 'VideoController@video')->name('videos.show');
-Route::get('/videos/{id}/play.mp4', 'VideoController@play')->name('videos.play');
-Route::get('/progress', 'ProgressBarController@progress');
-Route::get('/play.mp4', 'HomeController@play');
-
-Route::get('/videos/{id}/video.mp4', 'DownloadFileController@video')->name('videos.video.load');
-Route::get('/videos/{id}/audio.m4a', 'DownloadFileController@audio')->name('videos.audio.load');
-
-Route::get('/trigger', 'HomeController@runTrigger');
-
 Auth::routes();
 
+Route::get('/', 'WelcomeController@index')->name('index');
 Route::get('/home', 'HomeController@index')->name('home');
+
+Route::group([
+    'prefix' => 'videos',
+    'as' => 'videos.'
+], function () {
+    Route::get('/', 'VideoController@index')->name('index');
+    Route::get('{id}', 'VideoController@show')->name('show');
+    Route::get('{id}/stream', 'VideoController@stream')->name('stream');
+
+    Route::get('{id}/download/video', 'DownloadFileController@video')->name('download.video');
+    Route::get('{id}/download/audio', 'DownloadFileController@audio')->name('download.audio');
+});

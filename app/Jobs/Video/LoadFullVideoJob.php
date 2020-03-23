@@ -3,7 +3,7 @@
 namespace App\Jobs\Video;
 
 use App\Events\UploadingFile\LoadingVideoStartedEvent;
-use App\YoutubeVideo;
+use App\Services\Youtube\YoutubeVideoService;
 
 class LoadFullVideoJob extends AbstractVideo
 {

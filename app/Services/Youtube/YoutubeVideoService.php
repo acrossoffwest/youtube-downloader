@@ -1,17 +1,28 @@
 <?php
 
 
-namespace App;
-
+namespace App\Services\Youtube;
 
 use App\Events\UploadingFile\ProgressEvent;
+use App\Models\File;
+use App\DataStructures\ProgressData;
 
-class YoutubeVideo
+/**
+ * Class YoutubeVideoService
+ * @package App\Services\Youtube
+ */
+class YoutubeVideoService
 {
     private string $url;
     private array $links;
     private YoutubeService $service;
+    protected File $model;
 
+    /**
+     * YoutubeVideoService constructor.
+     * @param string $url
+     * @throws \Exception
+     */
     public function __construct(string $url)
     {
         $this->service = new YoutubeService();
@@ -19,31 +30,50 @@ class YoutubeVideo
         $this->links = $this->service->getLinks($url);
     }
 
+    /**
+     * @return string
+     * @throws \Exception
+     */
     public function getId()
     {
         return $this->service->getVideoId($this->getUrl());
     }
 
+    /**
+     * @return string
+     */
     public function getVideoUrl()
     {
         return $this->service->getMostQualityVideoUrl($this->getLinks());
     }
 
+    /**
+     * @return string
+     */
     public function getAudioUrl()
     {
         return $this->service->getAudioUrl($this->getLinks());
     }
 
+    /**
+     * @return string
+     */
     public function getUrl(): string
     {
         return $this->url;
     }
 
+    /**
+     * @return array
+     */
     public function getLinks(): array
     {
         return $this->links;
     }
 
+    /**
+     * @return string
+     */
     public function download()
     {
         $model = $this->getModel(true);
@@ -59,6 +89,11 @@ class YoutubeVideo
         return $this->joinVideoWithAudio($this->downloadAudio(), $this->downloadVideo());
     }
 
+    /**
+     * @param string $audioPath
+     * @param string $videoPath
+     * @return string
+     */
     public function joinVideoWithAudio(string $audioPath, string $videoPath): string
     {
         $fullVideo = $this->getPath($this->getFullVideoFilename());
@@ -77,21 +112,38 @@ class YoutubeVideo
         return $fullVideo;
     }
 
+    /**
+     * @return string
+     * @throws \Exception
+     */
     public function getFullVideoFilename()
     {
         return $this->getId().'-full.mp4';
     }
 
+    /**
+     * @return string
+     * @throws \Exception
+     */
     public function getAudioFilename()
     {
         return $this->getId().'.m4a';
     }
 
+    /**
+     * @return string
+     * @throws \Exception
+     */
     public function getVideoFilename()
     {
         return $this->getId().'.mp4';
     }
-    protected File $model;
+
+    /**
+     * @param bool $fresh
+     * @return File
+     * @throws \Exception
+     */
     public function getModel(bool $fresh = false)
     {
         if (!empty($this->model) && !$fresh) {
@@ -113,6 +165,9 @@ class YoutubeVideo
         return $this->model = $file;
     }
 
+    /**
+     * @return string
+     */
     public function downloadAudio()
     {
         $prevPercent = 0;
@@ -130,6 +185,9 @@ class YoutubeVideo
         });
     }
 
+    /**
+     * @return string
+     */
     public function downloadVideo()
     {
         $prevPercent = 0;
@@ -147,21 +205,37 @@ class YoutubeVideo
         });
     }
 
+    /**
+     * @return string
+     * @throws \Exception
+     */
     public function getAudioPath(): string
     {
         return $this->getPath($this->getAudioFilename());
     }
 
+    /**
+     * @return string
+     * @throws \Exception
+     */
     public function getVideoPath(): string
     {
         return $this->getPath($this->getVideoFilename());
     }
 
+    /**
+     * @return string
+     * @throws \Exception
+     */
     public function getFullVideoPath(): string
     {
         return $this->getPath($this->getFullVideoFilename());
     }
 
+    /**
+     * @param string $relativePath
+     * @return string
+     */
     private function getPath(string $relativePath): string
     {
         return storage_path('app/public/'.$relativePath);

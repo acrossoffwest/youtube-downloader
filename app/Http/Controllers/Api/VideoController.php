@@ -3,14 +3,11 @@
 namespace App\Http\Controllers\Api;
 
 use App\Events\UploadingFile\LoadingVideoStartedEvent;
-use App\Events\UploadingFile\ProgressEvent;
-use App\File;
+use App\Models\File;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\YoutubeUrlRequest;
 use App\Jobs\Video\StartLoadingJob;
-use App\ProgressData;
-use App\YoutubeVideo;
-use Illuminate\Http\Request;
-use Iman\Streamer\VideoStreamer;
+use App\Services\Youtube\YoutubeVideoService;
 
 class VideoController extends Controller
 {
@@ -21,10 +18,12 @@ class VideoController extends Controller
      */
     public function __construct()
     {
-//        $this->middleware('auth');
+        //$this->middleware('auth');
     }
 
     /**
+     * Get all videos rows
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function index()
@@ -37,9 +36,15 @@ class VideoController extends Controller
             ->json($videos);
     }
 
-    public function download(Request $request)
+    /**
+     * Run uploading video from Youtube
+     *
+     * @param YoutubeUrlRequest $request
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+    public function runUploading(YoutubeUrlRequest $request)
     {
-        $ytv = new YoutubeVideo($request->get('url'));
+        $ytv = new YoutubeVideoService($request->get('url'));
 
         if (!$ytv->getModel()->uploaded) {
             event(new LoadingVideoStartedEvent($ytv->getModel(true)));

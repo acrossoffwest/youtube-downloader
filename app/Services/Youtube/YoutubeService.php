@@ -1,13 +1,10 @@
 <?php
 
 
-namespace App;
+namespace App\Services\Youtube;
 
-use Illuminate\Http\Request;
-use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Storage;
+use App\Services\FileService;
+use Illuminate\Support\Facades\Http;
 use YouTube\YouTubeDownloader;
 
 /**
@@ -16,12 +13,40 @@ use YouTube\YouTubeDownloader;
  */
 class YoutubeService
 {
+    /**
+     * Get videos links
+     *
+     * @param string $url
+     * @return array
+     * @throws \Exception
+     */
     public function getLinks(string $url): array
     {
         $yt = new YouTubeDownloader();
         return $yt->getDownloadLinks($this->getVideoId($url));
     }
 
+    /*
+     * Get the video information
+     * return array
+     */
+    public function getVideoInfo(string $url){
+        return Http::get("https://www.youtube.com/get_video_info", [
+            'query' => [
+               'video_id' => $this->getVideoId($url),
+                'cpn' => 'CouQulsSRICzWn5E&eurl',
+                'el' => 'adunit'
+            ]
+        ])->json();
+    }
+
+    /**
+     * Get YouTube video ID from URL
+     *
+     * @param string $url
+     * @return string
+     * @throws \Exception
+     */
     public function getVideoId(string $url): string
     {
         if (preg_match('/(https\:\/\/youtu\.be\/)/', $url)) {
@@ -38,6 +63,10 @@ class YoutubeService
         throw new \Exception('Something went wrong');
     }
 
+    /**
+     * @param array $links
+     * @return string
+     */
     public function getMostQualityVideoUrl(array $links): string
     {
         return collect($links)
@@ -60,6 +89,10 @@ class YoutubeService
             ->first()['url'];
     }
 
+    /**
+     * @param array $links
+     * @return string
+     */
     public function getAudioUrl(array $links): string
     {
         return collect($links)
@@ -68,8 +101,9 @@ class YoutubeService
     }
 
     /**
-     * @param array $links
-     * @param string $id
+     * @param string $directUrl
+     * @param string $filePath
+     * @param \Closure|null $progress
      * @return string
      */
     public function download(string $directUrl, string $filePath, \Closure $progress = null)

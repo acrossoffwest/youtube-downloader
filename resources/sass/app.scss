@@ -7,3 +7,7 @@
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
 @import '~bootstrap/scss/bootstrap-grid';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
