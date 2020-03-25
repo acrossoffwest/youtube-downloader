@@ -1,0 +1,164 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Youtube Downloader",
+        "description": "UI for caching and loading video/audio from YouTube ",
+        "contact": {
+            "email": "acrossoffwest@gmail.com"
+        },
+        "version": "0.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://youtube-downloader.localhost/api",
+            "description": "Youtube Downloader host server"
+        }
+    ],
+    "paths": {
+        "/videos": {
+            "get": {
+                "tags": [
+                    "File"
+                ],
+                "summary": "Load all video models",
+                "description": "Load all video models",
+                "operationId": "videos",
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/File"
+                                    }
+                                },
+                                "example": [
+                                    {
+                                        "id": 1,
+                                        "youtube_id": "Yd7kjmvQS1Y",
+                                        "uploaded": 1,
+                                        "title": null,
+                                        "description": null
+                                    },
+                                    {
+                                        "id": 2,
+                                        "youtube_id": "wHtH_SHhc6E",
+                                        "uploaded": 1,
+                                        "title": null,
+                                        "description": null
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "File"
+                ],
+                "summary": "Run uploading of video",
+                "description": "Run uploading of video from YouTube by URL",
+                "operationId": "videos.uploading.run",
+                "requestBody": {
+                    "description": "YouTube video's URL",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "url"
+                                ],
+                                "properties": {
+                                    "url": {
+                                        "title": "URL",
+                                        "description": "YouTube video URL",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/File"
+                                },
+                                "example": {
+                                    "id": "2",
+                                    "uploaded": "1",
+                                    "youtube_id": "X_sby-AczxCkl",
+                                    "title": "Test video",
+                                    "description": "Description of Test video"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity. Empty request body or invalid URL",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "errors": {
+                                        "url": [
+                                            "The url format is invalid."
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "File": {
+                "title": "File",
+                "description": "File resource",
+                "required": [
+                    "id",
+                    "youtube_id",
+                    "uploaded"
+                ],
+                "properties": {
+                    "id": {
+                        "title": "ID",
+                        "description": "ID asd asd",
+                        "format": "int64"
+                    },
+                    "title": {
+                        "title": "Title",
+                        "description": "Title",
+                        "format": "string"
+                    },
+                    "description": {
+                        "title": "Description",
+                        "description": "Description",
+                        "format": "string"
+                    },
+                    "uploaded": {
+                        "title": "Uploaded",
+                        "description": "Uploaded status",
+                        "format": "boolean"
+                    },
+                    "youtube_id": {
+                        "title": "YouTube ID",
+                        "description": "Unique YouTube ID of Video",
+                        "format": "string"
+                    }
+                },
+                "type": "object"
+            }
+        }
+    }
+}

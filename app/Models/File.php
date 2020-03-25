@@ -19,4 +19,12 @@ class File extends Model
         'title',
         'description',
     ];
+
+    protected $visible = [
+        'id',
+        'youtube_id',
+        'uploaded',
+        'title',
+        'description',
+    ];
 }

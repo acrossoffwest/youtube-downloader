@@ -24,9 +24,9 @@ Route::group([
 ], function () {
     Route::group([
         'prefix' => 'videos',
-        'a' => 'videos'
+        'as' => 'videos.'
     ], function () {
-        Route::get('/', 'VideoController@index');
-        Route::post('/', 'VideoController@runUploading');
+        Route::get('/', 'VideoController@index')->name('index');
+        Route::post('/', 'VideoController@runUploading')->name('uploading.run');
     });
 });

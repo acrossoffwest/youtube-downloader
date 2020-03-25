@@ -2,4 +2,4 @@
 
 UI wrapper for  [Athlon1600/youtube-downloader](https://github.com/Athlon1600/youtube-downloader)
 
-Based on Laravel 7
+Based on [Laravel 7](github.com/laravel/laravel)
