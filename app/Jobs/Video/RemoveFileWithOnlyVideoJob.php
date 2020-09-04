@@ -18,6 +18,5 @@ class RemoveFileWithOnlyVideoJob extends AbstractVideo
     public function handle()
     {
         $this->video->downloadVideo();
-        logs()->info('Video id: "'.$this->video->getId().'" video loaded.');
     }
 }

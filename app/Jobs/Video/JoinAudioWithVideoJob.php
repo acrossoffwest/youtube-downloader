@@ -17,7 +17,10 @@ class JoinAudioWithVideoJob extends AbstractVideo
      */
     public function handle()
     {
-        $this->video->joinVideoWithAudio($this->video->getAudioPath(), $this->video->getVideoPath());
-        logs()->info('"'.$this->video->getId().'": video and audio joined.');
+        $this->video
+            ->joinVideoWithAudio(
+                $this->video->getAudioPath(),
+                $this->video->getVideoPath()
+            );
     }
 }

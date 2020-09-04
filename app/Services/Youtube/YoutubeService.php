@@ -5,6 +5,7 @@ namespace App\Services\Youtube;
 
 use App\Services\FileService;
 use Illuminate\Support\Facades\Http;
+use Symfony\Component\DomCrawler\Crawler;
 use YouTube\YouTubeDownloader;
 
 /**
@@ -30,14 +31,13 @@ class YoutubeService
      * Get the video information
      * return array
      */
-    public function getVideoInfo(string $url){
-        return Http::get("https://www.youtube.com/get_video_info", [
-            'query' => [
-               'video_id' => $this->getVideoId($url),
-                'cpn' => 'CouQulsSRICzWn5E&eurl',
-                'el' => 'adunit'
-            ]
-        ])->json();
+    public function getVideoInfo(string $url)
+    {
+        $html = new Crawler((new YouTubeDownloader())->getPageHtml($url));
+        return [
+            'title' => $html->filter('meta[name="twitter:title"]')->attr('content'),
+            'description' => $html->filter('meta[name="twitter:description"]')->attr('content')
+        ];
     }
 
     /**
@@ -95,9 +95,11 @@ class YoutubeService
      */
     public function getAudioUrl(array $links): string
     {
-        return collect($links)
+        $url = collect($links)
             ->filter(fn ($v) => preg_match('/(m4a, audio)/', $v['format']))
-            ->first()['url'];
+            ->first();
+        logs()->info($links);
+        return $url['url'] ?? '';
     }
 
     /**

@@ -63,11 +63,16 @@ class VideoController extends Controller
     public function index()
     {
         $videos = File::query()
-            ->where('type', 'video/audio')
-            ->get();
+            ->where('type', 'video/audio');
+
+        if (auth()->guest()) {
+            $videos = $videos->whereNull('user_id');
+        } else {
+            $videos = $videos->byUserId(auth()->user()->id);
+        }
 
         return response()
-            ->json($videos);
+            ->json($videos->get());
     }
 
     /**
@@ -128,7 +133,7 @@ class VideoController extends Controller
      */
     public function runUploading(YoutubeUrlRequest $request)
     {
-        $ytv = new YoutubeVideoService($request->get('url'));
+        $ytv = new YoutubeVideoService($request->get('url'), auth()->guest() ?: auth()->user()->id);
 
         if (!$ytv->getModel()->uploaded) {
             event(new LoadingVideoStartedEvent($ytv->getModel(true)));

@@ -19,14 +19,14 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::group([
-    'namespace' => 'Api'
-], function () {
-    Route::group([
-        'prefix' => 'videos',
-        'as' => 'videos.'
-    ], function () {
-        Route::get('/', 'VideoController@index')->name('index');
-        Route::post('/', 'VideoController@runUploading')->name('uploading.run');
+Route::namespace('Api')
+    ->middleware('auth_and_guest:api')
+    ->group(function () {
+        Route::group([
+            'prefix' => 'videos',
+            'as' => 'videos.'
+        ], function () {
+            Route::get('/', 'VideoController@index')->name('index');
+            Route::post('/', 'VideoController@runUploading')->name('uploading.run');
+        });
     });
-});

@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Services\Youtube\YoutubeService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -14,8 +15,7 @@ class ExampleTest extends TestCase
      */
     public function testBasicTest()
     {
-        $response = $this->get('/');
-
-        $response->assertStatus(200);
+        $service = new YoutubeService();
+        dd($service->getVideoInfo('https://youtu.be/n8R3HtazP9M'));
     }
 }

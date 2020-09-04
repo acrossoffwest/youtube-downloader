@@ -1975,14 +1975,8 @@ __webpack_require__.r(__webpack_exports__);
         return alert('You have to fill URL input.');
       }
 
-      fetch(this.videosLoadStart, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          url: this.videoUrl
-        })
+      axios.post(this.videosLoadStart, {
+        url: this.videoUrl
       }).then(function (r) {
         if (r.status !== 200) {
           return alert('Something went wrong.');
@@ -2110,9 +2104,8 @@ __webpack_require__.r(__webpack_exports__);
   mounted: function mounted() {
     var _this = this;
 
-    fetch(this.videosListUrl).then(function (r) {
-      return r.json();
-    }).then(function (data) {
+    axios.get(this.videosListUrl).then(function (_ref) {
+      var data = _ref.data;
       _this.videos = data;
 
       _this.videos.forEach(function (item, index) {
@@ -55920,7 +55913,7 @@ var render = function() {
               return _c("div", { staticClass: "row" }, [
                 _c("div", { staticClass: "col-4" }, [
                   _c("p", [
-                    _vm._v(_vm._s(video.youtube_id) + " "),
+                    _vm._v(_vm._s(video.title || video.youtube_id) + " "),
                     video.uploaded || video.percent === 100
                       ? _c("span", [
                           _vm._v("- "),
@@ -72693,6 +72686,7 @@ try {
 
 window.axios = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+window.axios.defaults.headers.common['Authorization'] = "Bearer ".concat(document.querySelector('meta[name="api-token"]').getAttribute('content'));
 /**
  * Echo exposes an expressive API for subscribing to channels and listening
  * for events that are broadcast by Laravel. Echo and event broadcasting
@@ -73003,8 +72997,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /media/acrossoffwest/128e46fc-6f1a-4884-b5bb-ec00ffb1d48e/Projects/My/youtube-downloader/resources/js/app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! /media/acrossoffwest/128e46fc-6f1a-4884-b5bb-ec00ffb1d48e/Projects/My/youtube-downloader/resources/sass/app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! /home/acrossoffwest/Documents/Projects/youtube-downloader/resources/js/app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! /home/acrossoffwest/Documents/Projects/youtube-downloader/resources/sass/app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

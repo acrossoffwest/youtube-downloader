@@ -14,7 +14,7 @@
             </div>
             <div class="row" v-for="video in videos">
                 <div class="col-4">
-                    <p>{{ video.youtube_id }} <span v-if="video.uploaded || video.percent === 100">- <a :href="`/videos/${video.youtube_id}`">Watch</a></span></p>
+                    <p>{{ video.title || video.youtube_id }} <span v-if="video.uploaded || video.percent === 100">- <a :href="`/videos/${video.youtube_id}`">Watch</a></span></p>
                 </div>
                 <div class="col-4">
                     {{ video.status ? video.status : (video.uploaded ? 'Done' : 'Unknown') }}
@@ -53,9 +53,7 @@
             }
         },
         mounted() {
-            fetch(this.videosListUrl).then((r) => {
-                return r.json();
-            }).then((data) => {
+            axios.get(this.videosListUrl).then(({data}) => {
                 this.videos = data
 
                 this.videos.forEach((item, index) => {

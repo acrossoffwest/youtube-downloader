@@ -11,11 +11,6 @@ use Illuminate\Queue\SerializesModels;
 
 class LoadVideoJob extends AbstractVideo
 {
-    public function __construct(YoutubeVideoService $video)
-    {
-        parent::__construct($video);
-    }
-
     /**
      * Execute the job.
      *
@@ -24,6 +19,5 @@ class LoadVideoJob extends AbstractVideo
     public function handle()
     {
         $this->video->downloadVideo();
-        logs()->info('Video id: "'.$this->video->getId().'" video loaded.');
     }
 }

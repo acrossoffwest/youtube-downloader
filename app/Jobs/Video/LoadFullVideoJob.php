@@ -14,7 +14,6 @@ class LoadFullVideoJob extends AbstractVideo
      */
     public function handle()
     {
-        $model = $this->video->getModel(true);
-        logs()->info('"'.$this->video->getId().'": Model created');
+        $this->video->getModel(true);
     }
 }

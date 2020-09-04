@@ -17,11 +17,10 @@ class StartLoadingJob extends AbstractVideo
      */
     public function handle()
     {
-        $chain = [
+        dispatch(new LoadFullVideoJob($this->video))->chain([
             new LoadAudioJob($this->video),
             (new LoadVideoJob($this->video)),
             new JoinAudioWithVideoJob($this->video)
-        ];
-        dispatch(new LoadFullVideoJob($this->video))->chain($chain);
+        ]);
     }
 }

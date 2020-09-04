@@ -32,14 +32,8 @@
                 if (!this.videoUrl) {
                     return alert('You have to fill URL input.');
                 }
-                fetch(this.videosLoadStart, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        url: this.videoUrl
-                    })
+                axios.post(this.videosLoadStart, {
+                    url: this.videoUrl
                 }).then((r) => {
                     if (r.status !== 200) {
                         return alert('Something went wrong.');

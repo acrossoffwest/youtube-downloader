@@ -30,8 +30,17 @@ class VideoController extends Controller
      */
     public function index()
     {
+        $videos = File::query()
+            ->where('type', 'video/audio');
+
+        if (auth()->guest()) {
+            $videos = $videos->withoutUser();
+        } else {
+            $videos = $videos->byUserId(auth()->user()->id);
+        }
+
         return view('videos', [
-            'videos' => File::query()->where('type', 'video/audio')->get()
+            'videos' => $videos->get()
         ]);
     }
 

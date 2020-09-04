@@ -18,6 +18,5 @@ class LoadAudioJob extends AbstractVideo
     public function handle()
     {
         $this->video->downloadAudio();
-        logs()->info('"'.$this->video->getId().'": audio loaded.');
     }
 }

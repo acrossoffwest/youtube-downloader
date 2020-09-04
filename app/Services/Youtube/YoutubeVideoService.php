@@ -6,6 +6,7 @@ namespace App\Services\Youtube;
 use App\Events\UploadingFile\ProgressEvent;
 use App\Models\File;
 use App\DataStructures\ProgressData;
+use Illuminate\Database\Eloquent\Builder;
 
 /**
  * Class YoutubeVideoService
@@ -17,16 +18,18 @@ class YoutubeVideoService
     private array $links;
     private YoutubeService $service;
     protected File $model;
+    protected $userId;
 
     /**
      * YoutubeVideoService constructor.
      * @param string $url
      * @throws \Exception
      */
-    public function __construct(string $url)
+    public function __construct(string $url, int $userId = null)
     {
         $this->service = new YoutubeService();
         $this->url = $url;
+        $this->userId = $userId;
         $this->links = $this->service->getLinks($url);
     }
 
@@ -150,18 +153,28 @@ class YoutubeVideoService
             return $this->model;
         }
 
+        /** @var Builder $fileQuery */
+        $fileQuery = File::query()->where('youtube_id', $this->getId());
+
+        if ($this->userId) {
+            $fileQuery = $fileQuery->where('user_id', $this->userId);
+        } else {
+            $fileQuery = $fileQuery->whereNull('user_id');
+        }
+
         /** @var File $file */
-        $file = File::query()->where('youtube_id', $this->getId())->first();
+        $file = $fileQuery->first();
         if (!empty($file)) {
             return $this->model = $file;
         }
 
-        $file = File::query()->create([
+        $file = File::query()->create(array_merge([
             'full_video_filename' => $this->getFullVideoFilename(),
             'video_filename' => $this->getVideoFilename(),
             'audio_filename' => $this->getAudioFilename(),
-            'youtube_id' => $this->getId()
-        ]);
+            'youtube_id' => $this->getId(),
+            'user_id' => $this->userId
+        ], $this->service->getVideoInfo($this->url)));
         return $this->model = $file;
     }
 
