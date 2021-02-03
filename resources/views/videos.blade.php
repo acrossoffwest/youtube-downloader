@@ -13,6 +13,9 @@
         <div class="col-md-12">
             <video-download-form-component></video-download-form-component>
             <videos-list-component></videos-list-component>
+            <small style="text-align: left">
+                * Videos will delete after one week
+            </small>
         </div>
     </div>
 </div>

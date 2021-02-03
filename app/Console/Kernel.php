@@ -24,6 +24,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+        $schedule->command('media:expired:notify')->daily();
         $schedule->command('media:expired:delete')->daily();
     }
 

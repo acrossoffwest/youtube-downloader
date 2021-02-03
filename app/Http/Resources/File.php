@@ -36,6 +36,7 @@ class File extends JsonResource
             'title' => $this->title,
             'description' => $this->description,
             'uploaded' => $this->uploaded,
+            'left_days' => $this->left_days,
             'youtube_id' => $this->youtube_id,
         ];
     }
