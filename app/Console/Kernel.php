@@ -26,6 +26,7 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('media:expired:notify')->daily();
         $schedule->command('media:expired:delete')->daily();
+        $schedule->command('unauthorized:users:media:expired:delete')->everyFifteenMinutes();
     }
 
     /**

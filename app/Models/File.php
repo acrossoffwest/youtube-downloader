@@ -31,12 +31,18 @@ class File extends Model
         'uploaded',
         'user_id',
         'left_days',
+        'left_minutes',
         'title',
+        'video_url',
+        'audio_url',
         'description',
     ];
 
     protected $appends = [
-        'left_days'
+        'left_days',
+        'left_minutes',
+        'video_url',
+        'audio_url',
     ];
 
     public function scopeByUserId(Builder $q, int $userId)
@@ -51,7 +57,22 @@ class File extends Model
 
     public function getLeftDaysAttribute()
     {
-        return $this->created_at->diffInDays(Carbon::now()->subWeek());
+        return $this->user_id ? $this->created_at->diffInDays(Carbon::now()->subWeek()) : null;
+    }
+
+    public function getLeftMinutesAttribute()
+    {
+        return $this->created_at->diffInMinutes(Carbon::now()->subHour());
+    }
+
+    public function getAudioUrlAttribute()
+    {
+        return route('videos.download.audio', ['id' => $this->youtube_id]);
+    }
+
+    public function getVideoUrlAttribute()
+    {
+        return route('videos.download.video', ['id' => $this->youtube_id]);
     }
 
     public function user()

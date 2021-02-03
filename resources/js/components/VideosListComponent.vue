@@ -12,12 +12,15 @@
                     <b>Progress bar</b>
                 </div>
                 <div class="col-3">
-                    <b>Left days</b>
+                    <b>Left time</b>
                 </div>
             </div>
             <div class="row" v-for="video in videos">
                 <div class="col-3">
-                    <p>{{ video.title || video.youtube_id }} <span v-if="video.uploaded || video.percent === 100">- <a :href="`/videos/${video.youtube_id}`">Watch</a></span></p>
+                    <p>
+                        {{ video.title || video.youtube_id }} <span v-if="video.uploaded || video.percent === 100"></span><br>
+                        <a :href="`/videos/${video.youtube_id}`">Watch</a> - <a :href="`${video.video_url}`">Video</a></span> - <a :href="`${video.audio_url}`">Audio</a></span>
+                    </p>
                 </div>
                 <div class="col-3">
                     {{ video.status ? video.status : (video.uploaded ? 'Done' : 'Unknown') }}
@@ -30,8 +33,11 @@
                         :value="video.percent"
                     />
                 </div>
-                <div class="col-3">
+                <div class="col-3" v-if="video.left_days">
                     {{ video.left_days }} days left
+                </div>
+                <div class="col-3" v-else>
+                    {{ video.left_minutes }} minutes left
                 </div>
             </div>
             <div class="row">
@@ -45,7 +51,7 @@
                     <b>Progress bar</b>
                 </div>
                 <div class="col-3">
-                    <b>Left days</b>
+                    <b>Left time</b>
                 </div>
             </div>
         </div>
