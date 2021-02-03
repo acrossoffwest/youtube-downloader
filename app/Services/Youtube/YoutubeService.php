@@ -69,23 +69,24 @@ class YoutubeService
      */
     public function getMostQualityVideoUrl(array $links): string
     {
-        return collect($links)
+        $result = collect($links)
             ->map(function ($item) use (&$audio){
                 $format = explode(', ', $item['format']);
 
                 if (!isset($format[2]) || preg_match('/audio/', $format[2]) || count($format) < 3) {
                     return null;
                 }
-
                 return [
                     'url' => $item['url'],
                     'type' => 'video/'.$format[0],
-                    'size' => @intval(trim($format[count($format)])) ?? 0,
+                    'size' => @intval(trim($format[count($format) - 1])) ?? 0,
                 ];
             })
             ->filter(fn ($v) => $v)
             ->sort(fn ($a, $b) => $a['size'] < $b['size'] )
-            ->first()['url'];
+            ->first();
+
+        return $result['url'];
     }
 
     /**
