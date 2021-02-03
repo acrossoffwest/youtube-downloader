@@ -21,6 +21,9 @@ class JoinAudioWithVideoJob extends AbstractVideo
             );
 
         $videoModel = $this->video->getModel(true);
+        if (!$videoModel->user_id) {
+            return;
+        }
         Mail::to($videoModel->user->email)->send(new VideoDownloaded($videoModel));
     }
 }
