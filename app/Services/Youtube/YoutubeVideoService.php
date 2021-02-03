@@ -253,4 +253,20 @@ class YoutubeVideoService
     {
         return storage_path('app/public/'.$relativePath);
     }
+
+    public function deleteFile(string $filepath)
+    {
+        if (!file_exists($filepath)) {
+            return;
+        }
+        unlink($filepath);
+    }
+
+    public function deleteAll()
+    {
+        $this->deleteFile($this->getAudioPath());
+        $this->deleteFile($this->getVideoPath());
+        $this->deleteFile($this->getFullVideoPath());
+        $this->getModel(true)->delete();
+    }
 }
