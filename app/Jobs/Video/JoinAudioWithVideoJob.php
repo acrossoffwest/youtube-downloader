@@ -2,11 +2,8 @@
 
 namespace App\Jobs\Video;
 
-use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
+use App\Mail\VideoDownloaded;
+use Illuminate\Support\Facades\Mail;
 
 class JoinAudioWithVideoJob extends AbstractVideo
 {
@@ -22,5 +19,8 @@ class JoinAudioWithVideoJob extends AbstractVideo
                 $this->video->getAudioPath(),
                 $this->video->getVideoPath()
             );
+
+        $videoModel = $this->video->getModel(true);
+        Mail::to($videoModel->user->email)->send(new VideoDownloaded($videoModel));
     }
 }

@@ -35,8 +35,6 @@ class FileService
             'read_timeout' => 60*60
         ]);
 
-        logs()->info($response->getStatusCode());
-
         if ($response->getStatusCode() !== 200) {
             return false;
         }

@@ -98,7 +98,6 @@ class YoutubeService
         $url = collect($links)
             ->filter(fn ($v) => preg_match('/(m4a, audio)/', $v['format']))
             ->first();
-        logs()->info($links);
         return $url['url'] ?? '';
     }
 
