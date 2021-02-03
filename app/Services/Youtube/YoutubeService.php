@@ -73,18 +73,17 @@ class YoutubeService
             ->map(function ($item) use (&$audio){
                 $format = explode(', ', $item['format']);
 
-                if (!isset($format[2]) || preg_match('/audio/', $format[2])) {
+                if (!isset($format[2]) || preg_match('/audio/', $format[2]) || count($format) < 3) {
                     return null;
                 }
 
                 return [
                     'url' => $item['url'],
-                    'type' => preg_match('/(video\/|\/)/', $format[2]) ? $format[2] : $format[2].'/'.$format[0],
-                    'size' => @intval(trim($format[1])),
+                    'type' => 'video/'.$format[0],
+                    'size' => @intval(trim($format[count($format)])) ?? 0,
                 ];
             })
             ->filter(fn ($v) => $v)
-            ->filter(fn ($v) => $v['type'] === 'video/mp4')
             ->sort(fn ($a, $b) => $a['size'] < $b['size'] )
             ->first()['url'];
     }
