@@ -133,7 +133,7 @@ class VideoController extends Controller
      */
     public function runUploading(YoutubeUrlRequest $request)
     {
-        $ytv = new YoutubeVideoService($request->get('url'), auth()->guest() ?: auth()->user()->id);
+        $ytv = new YoutubeVideoService($request->get('url'), auth()->id());
 
         if (!$ytv->getModel()->uploaded) {
             event(new LoadingVideoStartedEvent($ytv->getModel(true)));
