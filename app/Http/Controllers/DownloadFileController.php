@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\Youtube\YoutubeVideoService;
+use Illuminate\Support\Str;
 
 /**
  * Class DownloadFileController
@@ -18,7 +19,7 @@ class DownloadFileController extends Controller
     public function video(string $id)
     {
         $ytv = new YoutubeVideoService('https://www.youtube.com/watch?v='.$id);
-        $this->downloadFile($ytv->download());
+        $this->downloadFile($ytv->download(), $ytv->getModel()->title);
     }
 
     /**
@@ -29,7 +30,7 @@ class DownloadFileController extends Controller
     public function audio(string $id)
     {
         $ytv = new YoutubeVideoService('https://www.youtube.com/watch?v='.$id);
-        $this->downloadFile($ytv->downloadAudio());
+        $this->downloadFile($ytv->downloadAudio(), $ytv->getModel()->title);
     }
 
     /**
@@ -37,11 +38,11 @@ class DownloadFileController extends Controller
      *
      * @param string $filepath
      */
-    private function downloadFile(string $filepath)
+    private function downloadFile(string $filepath, string $title = '')
     {
         header('Content-Description: File Transfer');
         header('Content-Type: application/octet-stream');
-        header('Content-Disposition: attachment; filename="'.basename($filepath).'"');
+        header('Content-Disposition: attachment; filename="'.($title !== '' ? Str::slug($title).'-' : '').basename($filepath).'"');
         header('Expires: 0');
         header('Cache-Control: must-revalidate');
         header('Pragma: public');
