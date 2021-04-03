@@ -181,10 +181,10 @@ class YoutubeVideoService
     /**
      * @return string
      */
-    public function downloadAudio()
+    public function downloadAudio(bool $withProgressEvent = true)
     {
         $prevPercent = 0;
-        return $this->service->download($this->getAudioUrl(), $this->getAudioPath(), function ($totalBytes, $restBytes) use (&$prevPercent) {
+        return $this->service->download($this->getAudioUrl(), $this->getAudioPath(), function ($totalBytes, $restBytes) use (&$prevPercent, $withProgressEvent) {
             if (!$totalBytes) {
                 return;
             }
@@ -193,7 +193,9 @@ class YoutubeVideoService
             if ($percent === $prevPercent) {
                 return;
             }
-            event(new ProgressEvent(new ProgressData($this->getId(), $percent, $status)));
+            if ($withProgressEvent) {
+                event(new ProgressEvent(new ProgressData($this->getId(), $percent, $status)));
+            }
             $prevPercent = $percent;
         });
     }

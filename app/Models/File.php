@@ -11,6 +11,8 @@ use Illuminate\Database\Eloquent\Model;
  * @package App\Models
  * @property User $user
  * @property Carbon $created_at
+ * @property string $callback_url
+ * @property bool $uploaded
  */
 class File extends Model
 {

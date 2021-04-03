@@ -2,14 +2,22 @@
 
 namespace App\Jobs\Video;
 
-use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
+use App\Services\Youtube\YoutubeVideoService;
 
+/**
+ * Class LoadAudioJob
+ * @package App\Jobs\Video
+ */
 class LoadAudioJob extends AbstractVideo
 {
+    protected bool $withProgressEvent = true;
+
+    public function __construct(YoutubeVideoService $video, bool $withProgressEvent = true)
+    {
+        parent::__construct($video);
+        $this->withProgressEvent = $withProgressEvent;
+    }
+
     /**
      * Execute the job.
      *
@@ -17,6 +25,6 @@ class LoadAudioJob extends AbstractVideo
      */
     public function handle()
     {
-        $this->video->downloadAudio();
+        $this->video->downloadAudio($this->withProgressEvent);
     }
 }
