@@ -5,6 +5,7 @@ namespace App\Services\Youtube;
 
 use App\Services\FileService;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 use Symfony\Component\DomCrawler\Crawler;
 use YouTube\YouTubeDownloader;
 
@@ -46,9 +47,10 @@ class YoutubeService
         }
 
         $item = $data['items'][0]['snippet'];
+
         return [
             'title' => trim($item['title']),
-            'description' => trim($item['description'])
+            'description' => Str::limit(trim($item['description']), 250)
         ];
     }
 
