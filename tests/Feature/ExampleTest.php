@@ -16,6 +16,6 @@ class ExampleTest extends TestCase
     public function testBasicTest()
     {
         $service = new YoutubeService();
-        dd($service->getVideoInfo('https://youtu.be/n8R3HtazP9M'));
+        $this->assertNotEmpty($service);
     }
 }

@@ -33,10 +33,22 @@ class YoutubeService
      */
     public function getVideoInfo(string $url)
     {
-        $html = new Crawler((new YouTubeDownloader())->getPageHtml($url));
+        $apiKey = config('services.youtube.api_key');
+        $videoId = $this->getVideoId($url);
+        $url = "https://www.googleapis.com/youtube/v3/videos?id=".$videoId."&key=".$apiKey."&part=snippet,contentDetails,statistics,status";
+        $data = Http::get($url)->json();
+
+        if (!isset($data['items']) || !isset($data['items'][0])) {
+            return [
+                'title' => '',
+                'description' => ''
+            ];
+        }
+
+        $item = $data['items'][0]['snippet'];
         return [
-            'title' => $html->filter('meta[name="twitter:title"]')->attr('content'),
-            'description' => $html->filter('meta[name="twitter:description"]')->attr('content')
+            'title' => trim($item['title']),
+            'description' => trim($item['description'])
         ];
     }
 
