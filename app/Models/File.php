@@ -24,6 +24,7 @@ class File extends Model
         'uploaded',
         'user_id',
         'title',
+        'callback_url',
         'description',
     ];
 
