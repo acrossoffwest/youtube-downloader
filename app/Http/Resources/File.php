@@ -42,7 +42,7 @@ class File extends JsonResource
             'video_url' => $this->left_minutes,
             'audio_url' => $this->left_minutes,
             'callback_url' => $this->callback_url,
-            'youtube_id' => $this->youtube_id,
+            'youtube_id' => $this->youtube_id
         ];
     }
 }
