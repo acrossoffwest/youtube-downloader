@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property Carbon $created_at
  * @property string $callback_url
  * @property bool $uploaded
+ * @property string $youtube_id
  */
 class File extends Model
 {
@@ -38,6 +39,7 @@ class File extends Model
         'title',
         'video_url',
         'audio_url',
+        'callback_url',
         'description',
     ];
 
@@ -70,12 +72,16 @@ class File extends Model
 
     public function getAudioUrlAttribute()
     {
-        return route('videos.download.audio', ['id' => $this->youtube_id]);
+        return route('videos.download.audio', [
+            'id' => $this->youtube_id
+        ]);
     }
 
     public function getVideoUrlAttribute()
     {
-        return route('videos.download.video', ['id' => $this->youtube_id]);
+        return route('videos.download.video', [
+            'id' => $this->youtube_id
+        ]);
     }
 
     public function user()
