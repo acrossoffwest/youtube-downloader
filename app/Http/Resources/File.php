@@ -12,6 +12,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  *     title="File",
  *     required={"id", "youtube_id", "uploaded"}
  * )
+ * @mixin \App\Models\File
  */
 class File extends JsonResource
 {
@@ -40,6 +41,7 @@ class File extends JsonResource
             'left_minutes' => $this->left_minutes,
             'video_url' => $this->left_minutes,
             'audio_url' => $this->left_minutes,
+            'callback_url' => $this->callback_url,
             'youtube_id' => $this->youtube_id,
         ];
     }

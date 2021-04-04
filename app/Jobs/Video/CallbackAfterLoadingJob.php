@@ -22,8 +22,11 @@ class CallbackAfterLoadingJob extends AbstractVideo
             return;
         }
 
+        $model->fill(['uploaded' => true])
+            ->save();
+
         try {
-            Http::post($model->callback_url, File::make($model)->toArray());
+            Http::post($model->callback_url, File::make($model)->toArray(null));
         } catch (\Throwable $e) {
             report($e);
         }

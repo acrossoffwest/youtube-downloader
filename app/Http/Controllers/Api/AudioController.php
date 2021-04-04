@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Events\UploadingFile\LoadingVideoStartedEvent;
+use App\Http\Requests\YoutubeAudioOnlyDownloadRequest;
 use App\Jobs\Video\CallbackAfterLoadingJob;
 use App\Jobs\Video\LoadAudioJob;
 use App\Models\File;
@@ -75,14 +76,16 @@ class AudioController extends Controller
      *     )
      * )
      *
-     * @param YoutubeUrlRequest $request
+     * @param YoutubeAudioOnlyDownloadRequest $request
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
      * @throws \Exception
      */
-    public function runUploading(YoutubeUrlRequest $request)
+    public function runUploading(YoutubeAudioOnlyDownloadRequest $request)
     {
         $ytv = new YoutubeVideoService($request->get('url'), auth()->id());
         $file = $ytv->getModel();
+        $file->fill(['callback_url' => $request->input('callback_url')])
+            ->save();
 
         if (!$file->uploaded) {
             dispatch(new LoadAudioJob($ytv))->chain([
