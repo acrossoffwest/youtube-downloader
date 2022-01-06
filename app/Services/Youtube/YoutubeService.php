@@ -7,6 +7,7 @@ use App\Services\FileService;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use Symfony\Component\DomCrawler\Crawler;
+use YouTube\Models\StreamFormat;
 use YouTube\YouTubeDownloader;
 
 /**
@@ -19,18 +20,21 @@ class YoutubeService
      * Get videos links
      *
      * @param string $url
-     * @return array
+     * @return StreamFormat[]
      * @throws \Exception
      */
     public function getLinks(string $url): array
     {
         $yt = new YouTubeDownloader();
-        return $yt->getDownloadLinks($this->getVideoId($url));
+        $id = $this->getVideoId($url);
+        $downloadOptions = $yt->getDownloadLinks($id);
+        return array_merge($downloadOptions->getVideoFormats(), $downloadOptions->getAudioFormats());
     }
 
     /*
      * Get the video information
      * return array
+     * @throws \Exception
      */
     public function getVideoInfo(string $url)
     {
@@ -67,7 +71,6 @@ class YoutubeService
             return str_replace('https://youtu.be/', '', $url);
         }
         $params = explode('&', parse_url($url)['query']);
-        $id = null;
         foreach ($params as $param) {
             if (preg_match('/(v=)/', $param)) {
                 return str_replace('v=', '', $param);
@@ -84,35 +87,36 @@ class YoutubeService
     public function getMostQualityVideoUrl(array $links): string
     {
         $result = collect($links)
-            ->map(function ($item) use (&$audio){
-                $format = explode(', ', $item['format']);
-
-                if (!isset($format[2]) || preg_match('/audio/', $format[2]) || count($format) < 3) {
+            ->map(function (StreamFormat $item) use (&$audio){
+                if (preg_match('/audio/', $item->getCleanMimeType())) {
                     return null;
                 }
                 return [
-                    'url' => $item['url'],
-                    'type' => 'video/'.$format[0],
-                    'size' => @intval(trim($format[count($format) - 1])) ?? 0,
+                    'url' => $item->url,
+                    'type' => $item->getCleanMimeType(),
+                    'size' => $item->contentLength,
                 ];
             })
             ->filter(fn ($v) => $v)
-            ->sort(fn ($a, $b) => $a['size'] < $b['size'] )
-            ->first();
+            ->sort(fn ($a, $b) => $a['size'] <=> $b['size'] )
+            ->last();
 
         return $result['url'];
     }
 
     /**
-     * @param array $links
+     * @param StreamFormat[] $links
      * @return string
      */
     public function getAudioUrl(array $links): string
     {
-        $url = collect($links)
-            ->filter(fn ($v) => preg_match('/(m4a, audio)/', $v['format']))
+        /** @var StreamFormat $streamFormat */
+        $streamFormat = collect($links)
+            ->filter(function (StreamFormat $v) {
+                return preg_match('/audio/', $v->getCleanMimeType());
+            })
             ->first();
-        return $url['url'] ?? '';
+        return $streamFormat->url;
     }
 
     /**

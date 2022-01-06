@@ -1,39 +1,38 @@
-FROM php:7.4.0-fpm-buster
+FROM acrossoffwest/domda-php-fpm:8.0.8.0
 
 MAINTAINER Yurij Karpov <acrossoffwest@gmail.com>
 
-RUN apt-get update
-#RUN apt-get install zip
-#RUN docker-php-ext-install zip
-RUN docker-php-ext-install pdo_mysql
-RUN docker-php-ext-install mysqli
-RUN docker-php-ext-install opcache
-RUN docker-php-ext-install pcntl
-RUN printf "\n" | pecl install -o -f redis
-RUN echo "extension=redis.so" > /usr/local/etc/php/conf.d/redis.ini
-RUN apt-get update
-RUN apt-get install -y --fix-missing  ffmpeg
+RUN install-php-extensions pdo_mysql mysqli pcntl swoole
 
-RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && \
-    php composer-setup.php --install-dir=/usr/local/bin --filename=composer && \
-    rm composer-setup.php
+RUN apk --no-cache update \
+    && apk --no-cache upgrade \
+    && apk add --no-cache \
+            mysql-client \
+            freetype \
+            libpng \
+            freetype-dev \
+            libpng-dev \
+            jpeg-dev \
+            libjpeg \
+            libjpeg-turbo-dev \
+            wget \
+            zlib-dev \
+            ttf-freefont \
+            fontconfig \
+            xvfb \
+            libxrender-dev \
+            gettext \
+            gettext-dev \
+            libxml2-dev \
+            gnu-libiconv-dev \
+            autoconf \
+            g++ \
+            git \
+            bash \
+            wkhtmltopdf \
+            icu-dev
 
-RUN apt-get -y install cron nano
+RUN apk add --no-cache ffmpeg
 
-# Copy cron schedule
-COPY ./crontab_schedule /tmp/crontab_schedule
-RUN crontab /tmp/crontab_schedule && rm /tmp/crontab_schedule
-
-# supervisor installation &&
-# create directory for child images to store configuration in
-RUN apt-get -y install supervisor && \
-  mkdir -p /var/log/supervisor && \
-  mkdir -p /etc/supervisor
-
-RUN apt-get install -y libmagickwand-dev --no-install-recommends
-RUN pecl install imagick && docker-php-ext-enable imagick
-
-COPY ./ /var/wwww/html
-
-CMD ["service", "cron", "start"]
+CMD ["crond"]
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/supervisord.conf"]

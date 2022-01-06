@@ -19,7 +19,7 @@ class StartLoadingJob extends AbstractVideo
     {
         dispatch(new LoadFullVideoJob($this->video))->chain([
             new LoadAudioJob($this->video),
-            (new LoadVideoJob($this->video)),
+            new LoadVideoJob($this->video),
             new JoinAudioWithVideoJob($this->video)
         ]);
     }

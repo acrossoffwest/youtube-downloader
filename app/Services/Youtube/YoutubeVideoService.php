@@ -76,17 +76,19 @@ class YoutubeVideoService
 
     /**
      * @return string
+     * @throws \Exception
      */
     public function download()
     {
         $model = $this->getModel(true);
 
-        if (file_exists($this->getFullVideoPath())) {
+        $fullVideoPath = $this->getFullVideoPath();
+        if (file_exists($fullVideoPath)) {
             if (!$model->uploaded) {
                 $model->uploaded = true;
                 $model->save();
             }
-            return $this->getFullVideoPath();
+            return $fullVideoPath;
         }
 
         return $this->joinVideoWithAudio($this->downloadAudio(), $this->downloadVideo());
@@ -183,41 +185,50 @@ class YoutubeVideoService
      */
     public function downloadAudio(bool $withProgressEvent = true)
     {
-        $prevPercent = 0;
-        return $this->service->download($this->getAudioUrl(), $this->getAudioPath(), function ($totalBytes, $restBytes) use (&$prevPercent, $withProgressEvent) {
-            if (!$totalBytes) {
-                return;
-            }
-            $status = 'Loading audio';
-            $percent = floor(($restBytes / ($totalBytes * 0.01)));
-            if ($percent === $prevPercent) {
-                return;
-            }
-            if ($withProgressEvent) {
-                event(new ProgressEvent(new ProgressData($this->getId(), $percent, $status)));
-            }
-            $prevPercent = $percent;
-        });
+        return $this->downloadMedia(
+            'Loading audio',
+            $this->getAudioUrl(),
+            $this->getAudioPath(),
+            $withProgressEvent
+        );
     }
 
     /**
      * @return string
      */
-    public function downloadVideo()
+    public function downloadVideo(bool $withProgressEvent = true)
+    {
+        return $this->downloadMedia(
+            'Loading video',
+            $this->getVideoUrl(),
+            $this->getVideoPath(),
+            $withProgressEvent
+        );
+    }
+
+    /**
+     * @return string
+     */
+    public function downloadMedia(string $status, string $url, string $path, bool $withProgressEvent = true)
     {
         $prevPercent = 0;
-        return $this->service->download($this->getVideoUrl(), $this->getVideoPath(), function ($totalBytes, $restBytes) use (&$prevPercent) {
-            if (!$totalBytes) {
-                return;
-            }
-            $percent = floor(($restBytes / ($totalBytes * 0.01)));
-            $status = 'Loading video';
-            if ($percent === $prevPercent) {
-                return;
-            }
-            event(new ProgressEvent(new ProgressData($this->getId(), $percent, $status)));
-            $prevPercent = $percent;
-        });
+        return $this->service->download(
+            $url,
+            $path,
+            function ($resource, $downloadSize, $downloaded) use (&$prevPercent, $withProgressEvent, $status) {
+                if (!$downloadSize) {
+                    return;
+                }
+
+                $percent = floor($downloaded / $downloadSize * 100);
+                if ($percent === $prevPercent) {
+                    return;
+                }
+                if ($withProgressEvent) {
+                    event(new ProgressEvent(new ProgressData($this->getId(), $percent, $status)));
+                }
+                $prevPercent = $percent;
+            });
     }
 
     /**
