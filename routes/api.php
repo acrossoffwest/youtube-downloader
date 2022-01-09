@@ -32,6 +32,6 @@ Route::namespace('Api')
             Route::get('/video', 'VideoController@getUrl')->name('url.video');
 
             Route::post('/audio', 'AudioController@runUploading')->name('uploading.run.audio');
-            Route::get('/audio', 'AudioController@runUploading')->name('url.audio');
+            Route::get('/audio', 'AudioController@getUrl')->name('url.audio');
         });
     });
