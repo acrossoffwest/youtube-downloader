@@ -10,6 +10,7 @@ use App\Models\File;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\YoutubeUrlRequest;
 use App\Jobs\Video\StartLoadingJob;
+use App\Services\Youtube\YoutubeService;
 use App\Services\Youtube\YoutubeVideoService;
 
 class AudioController extends Controller
@@ -94,5 +95,15 @@ class AudioController extends Controller
         }
 
         return response($file->fresh());
+    }
+
+    public function getUrl(YoutubeUrlRequest $request)
+    {
+        $yt = new YoutubeService();
+        $links = $yt->getLinks($request->get('url'));
+
+        return response()->json([
+            'url' => $yt->getAudioUrl($links)
+        ]);
     }
 }

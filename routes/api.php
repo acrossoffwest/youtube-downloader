@@ -27,7 +27,11 @@ Route::namespace('Api')
             'as' => 'videos.'
         ], function () {
             Route::get('/', 'VideoController@index')->name('index');
+
             Route::post('/', 'VideoController@runUploading')->name('uploading.run');
+            Route::get('/video', 'VideoController@getUrl')->name('url.video');
+
             Route::post('/audio', 'AudioController@runUploading')->name('uploading.run.audio');
+            Route::get('/audio', 'AudioController@runUploading')->name('url.audio');
         });
     });
