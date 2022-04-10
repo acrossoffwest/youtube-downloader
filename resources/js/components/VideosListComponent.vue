@@ -39,7 +39,9 @@
                 <div class="col-3" v-else>
                     {{ video.left_minutes }} minutes left
                 </div>
-                <hr>
+                <div class="col-12" v-else>
+                    <hr>
+                </div>
             </div>
             <div class="row">
                 <div class="col-3">
