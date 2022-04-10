@@ -30,7 +30,7 @@ class VideoDownloaded extends Mailable
      */
     public function build()
     {
-        return $this->from('yd@m.aow.space', 'Videos Downloader')->view('mail', [
+        return $this->from(env('MAIL_DEFAULT'), 'Videos Downloader')->view('mail', [
             'title' => 'Video: "'.$this->video->title.'" downloaded.',
             'content' => '<b>Link to video</b>: <a href="'.route('videos.show', ['id' => $this->video->youtube_id]).'">'.$this->video->title.'</a>'
         ]);
