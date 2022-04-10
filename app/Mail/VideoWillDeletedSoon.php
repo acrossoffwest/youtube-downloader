@@ -29,7 +29,7 @@ class VideoWillDeletedSoon extends Mailable
      */
     public function build()
     {
-        return $this->from('yd@m.aow.space', 'Videos Downloader')->view('mail', [
+        return $this->from(env('MAIL_DEFAULT'), 'Videos Downloader')->view('mail', [
             'title' => 'Video: "'.$this->video->title.'" will delete soon.',
             'content' => 'You can download them if you wanna save them. '
         ]);
