@@ -64,7 +64,8 @@ class VideoController extends Controller
     public function index()
     {
         $videos = File::query()
-            ->where('type', 'video/audio');
+            ->where('type', 'video/audio')
+            ->orderByDesc("updated_at");
 
         if (auth()->guest()) {
             $videos = $videos->whereNull('user_id');
