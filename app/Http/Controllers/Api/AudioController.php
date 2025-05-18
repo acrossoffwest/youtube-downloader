@@ -97,6 +97,16 @@ class AudioController extends Controller
         return response($file->fresh());
     }
 
+    public function upload(YoutubeAudioOnlyDownloadRequest $request)
+    {
+        $ytv = new YoutubeVideoService($request->get('url'), auth()->id());
+        $file = $ytv->getModel();
+
+        return response()->json([
+            'url' => $ytv->convertAudioToMp3($ytv->downloadAudio(false))
+        ]);
+    }
+
     public function getUrl(YoutubeUrlRequest $request)
     {
         $yt = new YoutubeService();

@@ -3,7 +3,6 @@
 use App\File;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -35,3 +34,6 @@ Route::namespace('Api')
             Route::get('/audio', 'AudioController@getUrl')->name('url.audio');
         });
     });
+
+Route::get('/video/links', 'LinksController@index')->name('links.index');
+Route::get('/audio/upload', 'Api\AudioController@upload')->name('upload.audio');

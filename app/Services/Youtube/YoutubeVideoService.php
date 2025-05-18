@@ -118,6 +118,21 @@ class YoutubeVideoService
     }
 
     /**
+     * @param string $audioPath
+     * @return string
+     */
+    public function convertAudioToMp3(string $audioPath): string
+    {
+        $audioFilepath = 'audio-'.time().'.mp3';
+        $audioLink = storage_path('app/public/'.$audioFilepath);
+
+        $cmd = 'ffmpeg -i '.$audioPath.' -c:v copy -c:a libmp3lame -q:a 4 '.$audioLink; //ffmpeg -i  -c:v copy -c:a aac -strict experimental '.$audioLink;
+        exec($cmd, $out);
+
+        return url($audioFilepath);
+    }
+
+    /**
      * @return string
      * @throws \Exception
      */

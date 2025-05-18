@@ -28,4 +28,5 @@ Route::group([
 
     Route::get('{id}/download/video', 'DownloadFileController@video')->name('download.video');
     Route::get('{id}/download/audio', 'DownloadFileController@audio')->name('download.audio');
+    Route::get('{id}/download/audio.m4a', 'DownloadFileController@audio')->name('download.audio,m4a');
 });
